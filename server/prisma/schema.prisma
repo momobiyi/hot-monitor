@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Monitor {
+  id              String         @id @default(cuid())
+  type            String
+  query           String
+  sources         String
+  intervalMinutes Int            @default(15)
+  enabled         Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  sourceItems     SourceItem[]
+  events          HotspotEvent[]
+}
+
+model SourceItem {
+  id          String       @id @default(cuid())
+  monitorId   String
+  source      String
+  title       String
+  url         String
+  snippet     String
+  author      String?
+  publishedAt DateTime?
+  fingerprint String
+  raw         String
+  createdAt   DateTime     @default(now())
+  monitor     Monitor      @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  judgement   AiJudgement?
+
+  @@unique([monitorId, fingerprint])
+  @@index([source])
+  @@index([createdAt])
+}
+
+model AiJudgement {
+  id           String     @id @default(cuid())
+  sourceItemId String     @unique
+  isRelevant   Boolean
+  isAuthentic  Boolean
+  isNew        Boolean
+  confidence   Float
+  reason       String
+  evidenceUrls String
+  shouldNotify Boolean
+  raw          String
+  createdAt    DateTime   @default(now())
+  sourceItem   SourceItem @relation(fields: [sourceItemId], references: [id], onDelete: Cascade)
+  event        HotspotEvent?
+}
+
+model HotspotEvent {
+  id            String      @id @default(cuid())
+  monitorId     String
+  aiJudgementId String      @unique
+  title         String
+  url           String
+  source        String
+  snippet       String
+  confidence    Float
+  reason        String
+  evidenceUrls  String
+  notifiedAt    DateTime?
+  createdAt     DateTime    @default(now())
+  monitor       Monitor     @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  aiJudgement   AiJudgement @relation(fields: [aiJudgementId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+}
+
+model SourceHealth {
+  id            String    @id @default(cuid())
+  source        String    @unique
+  status        String
+  lastCheckedAt DateTime
+  lastSuccessAt DateTime?
+  errorMessage  String?
+  itemCount     Int       @default(0)
+  updatedAt     DateTime  @updatedAt
+}

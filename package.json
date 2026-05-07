@@ -1,0 +1,49 @@
+{
+  "name": "hot-monitor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "tsx watch server/src/index.ts",
+    "dev:client": "vite --host 127.0.0.1 --port 5173 client",
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "tsc -p server/tsconfig.json",
+    "build:client": "vite build client",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:generate": "prisma generate --schema server/prisma/schema.prisma",
+    "db:migrate": "prisma migrate dev --schema server/prisma/schema.prisma",
+    "db:push": "prisma db push --schema server/prisma/schema.prisma",
+    "db:init": "node server/scripts/init-db.mjs"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.7.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "node-cron": "^3.0.3",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.3",
+    "@types/react": "^18.3.20",
+    "@types/react-dom": "^18.3.6",
+    "@vitejs/plugin-react-swc": "^3.9.0",
+    "concurrently": "^9.1.2",
+    "jsdom": "^25.0.1",
+    "prisma": "^6.7.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.1.3"
+  }
+}

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+
+# Local environment files may contain API keys and tokens.
+.env
+.env.*
+!.env.example
+server/prisma/dev.db
+server/prisma/dev.db-journal
+.superpowers/
+.logs/
