@@ -47,8 +47,8 @@ export function fallbackJudgement(item: SourceItemCandidate, query: string): AiJ
     isNew: true,
     confidence,
     reason: relevant
-      ? "AI provider is not configured, so this local fallback marked the item as relevant but below notification threshold."
-      : "AI provider is not configured and the item did not strongly match the monitor query.",
+      ? "AI 服务未配置，本地兜底判断认为该内容与监控主题相关，但置信度低于通知阈值。"
+      : "AI 服务未配置，本地兜底判断认为该内容与监控主题匹配度不足。",
     evidenceUrls: item.url ? [item.url] : [],
     shouldNotify: false
   };
@@ -58,6 +58,7 @@ export function buildJudgementPrompt(item: SourceItemCandidate, query: string, t
   return [
     "You are a news authenticity and relevance judge for a lightweight hotspot monitor.",
     "Return strict JSON only with keys: isRelevant, isAuthentic, isNew, confidence, reason, evidenceUrls, shouldNotify.",
+    "The reason field must be written in Chinese (中文).",
     `Set shouldNotify true when confidence is at least ${threshold} and the item is relevant, authentic, and new.`,
     `Monitor query: ${query}`,
     `Source: ${item.source}`,

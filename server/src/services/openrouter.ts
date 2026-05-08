@@ -27,7 +27,7 @@ async function judgeWithOpenRouter(item: SourceItemCandidate, query: string): Pr
       messages: [
         {
           role: "system",
-          content: "You judge hotspot relevance and authenticity. Return strict JSON only."
+          content: "You judge hotspot relevance and authenticity. Return strict JSON only. The reason field must be written in Chinese (中文)."
         },
         { role: "user", content: buildJudgementPrompt(item, query, config.notifyConfidenceThreshold) }
       ],
@@ -62,7 +62,7 @@ async function judgeWithMiniMax(item: SourceItemCandidate, query: string): Promi
         {
           role: "system",
           name: "Hot Monitor",
-          content: "You judge hotspot relevance and authenticity. Return strict JSON only."
+          content: "You judge hotspot relevance and authenticity. Return strict JSON only. The reason field must be written in Chinese (中文)."
         },
         {
           role: "user",
